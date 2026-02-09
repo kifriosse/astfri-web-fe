@@ -13,7 +13,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Play, Settings2, Sparkles, Wand2 } from 'lucide-react';
+import { Settings2, Sparkles, Wand2 } from 'lucide-react';
 import { transformSourceCode, TransformResponse } from '@/lib/api';
 import config from '@/lib/config.json';
 import { Toaster } from '@/components/ui/toaster';
@@ -50,7 +50,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-background selection:bg-accent/30">
       <Header />
       
-      <main className="flex-1 flex flex-col p-6 max-w-[1200px] mx-auto w-full space-y-6">
+      <main className="flex-1 flex flex-col p-6 max-w-[1600px] mx-auto w-full space-y-6">
         {/* Controls Bar */}
         <div className="bg-white rounded-xl border p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
@@ -104,9 +104,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Vertical Stack Layout */}
-        <div className="flex-1 flex flex-col gap-12">
-          <div className="flex flex-col animate-in slide-in-from-bottom duration-500">
+        {/* Side-by-Side (Vertical Split) Layout */}
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">
+          <div className="flex flex-col animate-in slide-in-from-left duration-500">
             <CodeEditor 
               value={sourceCode} 
               onChange={setSourceCode} 
@@ -114,7 +114,7 @@ export default function Home() {
             />
           </div>
           
-          <div className="flex flex-col animate-in slide-in-from-bottom duration-700">
+          <div className="flex flex-col animate-in slide-in-from-right duration-700">
             <OutputViewer 
               content={transformationResult?.result || ""} 
               isLoading={isTransforming} 
