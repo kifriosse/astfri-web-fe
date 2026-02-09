@@ -56,7 +56,13 @@ export const transformSourceCode = async (data: TransformRequest): Promise<Trans
 
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
-      return await response.json();
+      const responseData = await response.json();
+      // Support both 'output' and 'result' fields in the response JSON
+      return {
+        result: responseData.output || responseData.result || "",
+        error: responseData.error,
+        logs: responseData.logs
+      };
     } else {
       const text = await response.text();
       return { result: text };
