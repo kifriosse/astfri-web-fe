@@ -1,12 +1,6 @@
 
 {
-  "languages": [
-    { "id": "cpp", "label": "C++", "extension": ".cpp" },
-    { "id": "java", "label": "Java", "extension": ".java" },
-    { "id": "csharp", "label": "C#", "extension": ".cs" }
-  ],
-  "outputTypes": [
-    { "id": "pseudocode", "label": "Pseudocode", "description": "High-level logical representation" },
-    { "id": "uml", "label": "UML Diagram", "description": "Class structure visualization" }
-  ]
+  "ApiBaseUrl": "https://localhost:7280",
+  "InputLibs": ["cpp", "csharp", "java"],
+  "OutputLibs": ["text-pseudocode", "text-javecode", "uml"]
 }

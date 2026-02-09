@@ -20,8 +20,8 @@ import { Toaster } from '@/components/ui/toaster';
 
 export default function Home() {
   const [sourceCode, setSourceCode] = useState<string>("// Enter your code here\n#include <iostream>\n\nint main() {\n    std::cout << \"Hello World\";\n    return 0;\n}");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(config.languages[0].id);
-  const [selectedOutput, setSelectedOutput] = useState<string>(config.outputTypes[0].id);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(config.InputLibs[0]);
+  const [selectedOutput, setSelectedOutput] = useState<string>(config.OutputLibs[0]);
   const [transformationResult, setTransformationResult] = useState<TransformResponse | null>(null);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
 
@@ -55,28 +55,28 @@ export default function Home() {
         <div className="bg-white rounded-xl border p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
             <div className="flex flex-col space-y-1.5 w-full sm:w-48">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Source Language</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Source Library</label>
               <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
                 <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Language" />
+                  <SelectValue placeholder="Input Lib" />
                 </SelectTrigger>
                 <SelectContent>
-                  {config.languages.map(lang => (
-                    <SelectItem key={lang.id} value={lang.id}>{lang.label}</SelectItem>
+                  {config.InputLibs.map(lib => (
+                    <SelectItem key={lib} value={lib}>{lib.toUpperCase()}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="flex flex-col space-y-1.5 w-full sm:w-48">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Output Format</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Output Library</label>
               <Select value={selectedOutput} onValueChange={setSelectedOutput}>
                 <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Output Type" />
+                  <SelectValue placeholder="Output Lib" />
                 </SelectTrigger>
                 <SelectContent>
-                  {config.outputTypes.map(type => (
-                    <SelectItem key={type.id} value={type.id}>{type.label}</SelectItem>
+                  {config.OutputLibs.map(lib => (
+                    <SelectItem key={lib} value={lib}>{lib.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -110,7 +110,7 @@ export default function Home() {
             <CodeEditor 
               value={sourceCode} 
               onChange={setSourceCode} 
-              language={config.languages.find(l => l.id === selectedLanguage)?.label || ""} 
+              language={selectedLanguage.toUpperCase()} 
             />
           </div>
           
@@ -126,7 +126,7 @@ export default function Home() {
       </main>
 
       <footer className="p-6 text-center text-xs text-muted-foreground border-t bg-white">
-        <p>© 2024 ASTFRI Transformation Engine. Powering automated software analysis with C++ CLI.</p>
+        <p>© 2024 ASTFRI Transformation Engine. Powering automated software analysis.</p>
       </footer>
       <Toaster />
     </div>

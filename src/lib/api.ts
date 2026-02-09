@@ -1,5 +1,7 @@
 
-const BASE_URL = 'https://localhost:7280';
+import config from './config.json';
+
+const BASE_URL = config.ApiBaseUrl;
 
 export interface TransformRequest {
   inputLib: string | null;
@@ -17,12 +19,20 @@ export interface TransformResponse {
  * Base64 encodes a string, handling Unicode characters correctly.
  */
 const toBase64 = (str: string): string => {
-  return Buffer.from(str).toString('base64');
+  try {
+    // Browser-safe base64 encoding for Unicode
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+      return String.fromCharCode(parseInt(p1, 16));
+    }));
+  } catch (e) {
+    // Fallback to Buffer if available (Node environment)
+    return typeof Buffer !== 'undefined' ? Buffer.from(str).toString('base64') : btoa(str);
+  }
 };
 
 export const transformSourceCode = async (data: TransformRequest): Promise<TransformResponse> => {
   try {
-    // Encode the source code to base64 before sending
+    // Encode the source code to base64 before sending as requested
     const payload = {
       ...data,
       inputText: data.inputText ? toBase64(data.inputText) : null
@@ -55,7 +65,7 @@ export const transformSourceCode = async (data: TransformRequest): Promise<Trans
     console.error("API Error:", err);
     return {
       result: "",
-      error: "Nastala chyba pri komunikácii so serverom. Skontrolujte, či je backend spustený na localhost:7280."
+      error: `Nastala chyba pri komunikácii so serverom. Skontrolujte, či je backend spustený na ${BASE_URL}.`
     };
   }
 };
