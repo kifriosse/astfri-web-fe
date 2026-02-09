@@ -1,5 +1,5 @@
 
-const BASE_URL = 'http://localhost:7280';
+const BASE_URL = 'https://localhost:7280';
 
 export interface TransformRequest {
   inputLib: string | null;
