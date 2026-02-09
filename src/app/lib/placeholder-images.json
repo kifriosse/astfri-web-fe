@@ -1,0 +1,11 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Abstract tech background with code patterns",
+      "imageUrl": "https://picsum.photos/seed/astfri-tech/1200/800",
+      "imageHint": "abstract technology"
+    }
+  ]
+}
