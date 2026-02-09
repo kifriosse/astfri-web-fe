@@ -13,14 +13,27 @@ export interface TransformResponse {
   logs?: string[];
 }
 
+/**
+ * Base64 encodes a string, handling Unicode characters correctly.
+ */
+const toBase64 = (str: string): string => {
+  return Buffer.from(str).toString('base64');
+};
+
 export const transformSourceCode = async (data: TransformRequest): Promise<TransformResponse> => {
   try {
+    // Encode the source code to base64 before sending
+    const payload = {
+      ...data,
+      inputText: data.inputText ? toBase64(data.inputText) : null
+    };
+
     const response = await fetch(`${BASE_URL}/transform`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
