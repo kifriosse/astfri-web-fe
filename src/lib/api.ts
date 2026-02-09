@@ -1,8 +1,10 @@
 
+const BASE_URL = 'http://localhost:7280';
+
 export interface TransformRequest {
-  sourceCode: string;
-  language: string;
-  outputType: string;
+  inputLib: string | null;
+  inputText: string | null;
+  outputLib: string | null;
 }
 
 export interface TransformResponse {
@@ -12,34 +14,45 @@ export interface TransformResponse {
 }
 
 export const transformSourceCode = async (data: TransformRequest): Promise<TransformResponse> => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  try {
+    const response = await fetch(`${BASE_URL}/transform`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-  // Mocking the backend C++ CLI execution
-  if (!data.sourceCode.trim()) {
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        result: "",
+        error: `Nastala chyba: ${errorText || "Nepodarilo sa vykonať transformáciu."}`
+      };
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    } else {
+      const text = await response.text();
+      return { result: text };
+    }
+  } catch (err) {
+    console.error("API Error:", err);
     return {
       result: "",
-      error: "Nastala chyba: Zdrojový kód je prázdny."
+      error: "Nastala chyba pri komunikácii so serverom. Skontrolujte, či je backend spustený na localhost:7280."
     };
   }
-
-  if (data.outputType === 'uml') {
-    return {
-      result: `@startuml\nclass Transformer {\n  + transform(code: String): String\n}\n@enduml`,
-      logs: ["Starting UML parser...", "Extracting classes...", "Generating PlantUML syntax."]
-    };
-  }
-
-  return {
-    result: `POSTUP transformacia(${data.language})\nZAČIATOK\n  AK zdrojovy_kod JE platny POTOM\n    generuj_vystup()\n  INAK\n    vypis_chybu()\nKONIEC`,
-    logs: ["Initializing pseudocode generator...", "Mapping AST to pseudo-tokens."]
-  };
 };
 
-export const checkHealth = async (): Promise<{ status: string; timestamp: string }> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    status: "Healthy",
-    timestamp: new Date().toISOString()
-  };
+export const checkHealth = async (): Promise<any> => {
+  try {
+    const response = await fetch(`${BASE_URL}/healthcheck`);
+    if (!response.ok) throw new Error("API is not healthy");
+    return { status: "Healthy" };
+  } catch (err) {
+    throw err;
+  }
 };

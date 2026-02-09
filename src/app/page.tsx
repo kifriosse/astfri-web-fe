@@ -31,9 +31,9 @@ export default function Home() {
     
     try {
       const response = await transformSourceCode({
-        sourceCode,
-        language: selectedLanguage,
-        outputType: selectedOutput
+        inputText: sourceCode,
+        inputLib: selectedLanguage,
+        outputLib: selectedOutput
       });
       setTransformationResult(response);
     } catch (err) {
@@ -106,7 +106,7 @@ export default function Home() {
 
         {/* Side-by-Side (Vertical Split) Layout */}
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">
-          <div className="flex flex-col animate-in slide-in-from-left duration-500">
+          <div className="flex flex-col animate-in slide-in-from-left duration-500 overflow-hidden h-full">
             <CodeEditor 
               value={sourceCode} 
               onChange={setSourceCode} 
@@ -114,7 +114,7 @@ export default function Home() {
             />
           </div>
           
-          <div className="flex flex-col animate-in slide-in-from-right duration-700">
+          <div className="flex flex-col animate-in slide-in-from-right duration-700 overflow-hidden h-full">
             <OutputViewer 
               content={transformationResult?.result || ""} 
               isLoading={isTransforming} 
