@@ -104,7 +104,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Side-by-Side (Vertical Split) Layout */}
+        {/* Vertical Split Layout (Desktop: Side-by-Side, Mobile: Stacked) */}
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">
           <div className="flex flex-col animate-in slide-in-from-left duration-500 overflow-hidden h-full">
             <CodeEditor 
@@ -120,6 +120,7 @@ export default function Home() {
               isLoading={isTransforming} 
               error={transformationResult?.error}
               logs={transformationResult?.logs}
+              isUml={selectedOutput === 'uml'}
             />
           </div>
         </div>

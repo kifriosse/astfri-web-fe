@@ -1,22 +1,25 @@
 
 "use client";
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Terminal, Copy, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Terminal, Copy, CheckCircle2, AlertCircle, Image as ImageIcon, Code as CodeIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getPlantUMLUrl, extractPlantUML } from '@/lib/plantuml';
 
 interface OutputViewerProps {
   content: string;
   isLoading: boolean;
   error?: string;
   logs?: string[];
+  isUml?: boolean;
 }
 
-export function OutputViewer({ content, isLoading, error, logs }: OutputViewerProps) {
+export function OutputViewer({ content, isLoading, error, logs, isUml }: OutputViewerProps) {
   const { toast } = useToast();
 
   const handleCopy = () => {
@@ -26,6 +29,18 @@ export function OutputViewer({ content, isLoading, error, logs }: OutputViewerPr
       description: "Output copied to clipboard.",
     });
   };
+
+  const pumlCode = useMemo(() => {
+    if (!content) return null;
+    return extractPlantUML(content);
+  }, [content]);
+
+  const pumlUrl = useMemo(() => {
+    if (!pumlCode) return "";
+    return getPlantUMLUrl(pumlCode);
+  }, [pumlCode]);
+
+  const showUmlTabs = isUml && pumlCode;
 
   return (
     <div className="flex flex-col h-full space-y-4">
@@ -63,9 +78,42 @@ export function OutputViewer({ content, isLoading, error, logs }: OutputViewerPr
                 <p className="text-muted-foreground mt-2">{error}</p>
               </div>
             ) : content ? (
-              <pre className="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed">
-                {content}
-              </pre>
+              showUmlTabs ? (
+                <Tabs defaultValue="diagram" className="flex-1 flex flex-col h-full">
+                  <div className="px-6 pt-4 border-b bg-muted/20">
+                    <TabsList className="bg-muted/50">
+                      <TabsTrigger value="diagram" className="flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" />
+                        Diagram
+                      </TabsTrigger>
+                      <TabsTrigger value="source" className="flex items-center gap-2">
+                        <CodeIcon className="w-4 h-4" />
+                        Source
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <TabsContent value="diagram" className="flex-1 p-0 m-0 overflow-hidden h-full">
+                    <div className="w-full h-full flex items-center justify-center bg-white p-8 overflow-auto">
+                      <img 
+                        src={pumlUrl} 
+                        alt="PlantUML Diagram" 
+                        className="max-w-full h-auto shadow-md rounded border border-border/50"
+                        onLoad={() => console.log("Diagram loaded")}
+                        onError={() => console.error("Diagram failed to load")}
+                      />
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="source" className="flex-1 p-0 m-0 overflow-hidden h-full">
+                    <pre className="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed h-full">
+                      {content}
+                    </pre>
+                  </TabsContent>
+                </Tabs>
+              ) : (
+                <pre className="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed">
+                  {content}
+                </pre>
+              )
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 p-12 text-center text-muted-foreground">
                 <CheckCircle2 className="w-12 h-12 mb-4 opacity-20" />
