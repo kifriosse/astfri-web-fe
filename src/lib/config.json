@@ -2,5 +2,10 @@
 {
   "ApiBaseUrl": "https://localhost:7280",
   "InputLibs": ["cpp", "csharp", "java"],
-  "OutputLibs": ["text-pseudocode", "text-javacode", "uml"]
+  "OutputLibs": ["text-pseudocode", "text-javecode", "uml"],
+  "InputLibsDefaults": {
+    "cpp": "#include <iostream>\n\nint main() {\n    std::cout << \"Hello World from C++\";\n    return 0;\n}",
+    "csharp": "using System;\n\nnamespace HelloWorld {\n    class Program {\n        static void Main(string[] args) {\n            Console.WriteLine(\"Hello World from C#\");\n        }\n    }\n}",
+    "java": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World from Java\");\n    }\n}"
+  }
 }

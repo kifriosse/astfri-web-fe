@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { CodeEditor } from '@/components/CodeEditor';
 import { OutputViewer } from '@/components/OutputViewer';
@@ -19,11 +19,19 @@ import config from '@/lib/config.json';
 import { Toaster } from '@/components/ui/toaster';
 
 export default function Home() {
-  const [sourceCode, setSourceCode] = useState<string>("// Enter your code here\n#include <iostream>\n\nint main() {\n    std::cout << \"Hello World\";\n    return 0;\n}");
   const [selectedLanguage, setSelectedLanguage] = useState<string>(config.InputLibs[0]);
+  const [sourceCode, setSourceCode] = useState<string>((config as any).InputLibsDefaults[config.InputLibs[0]] || "");
   const [selectedOutput, setSelectedOutput] = useState<string>(config.OutputLibs[0]);
   const [transformationResult, setTransformationResult] = useState<TransformResponse | null>(null);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
+
+  const handleLanguageChange = (newLang: string) => {
+    setSelectedLanguage(newLang);
+    const defaultCode = (config as any).InputLibsDefaults[newLang];
+    if (defaultCode) {
+      setSourceCode(defaultCode);
+    }
+  };
 
   const handleTransform = async () => {
     setIsTransforming(true);
@@ -56,7 +64,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
             <div className="flex flex-col space-y-1.5 w-full sm:w-48">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Source Library</label>
-              <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+              <Select value={selectedLanguage} onValueChange={handleLanguageChange}>
                 <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Input Lib" />
                 </SelectTrigger>
@@ -104,7 +112,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Vertical Split Layout (Desktop: Side-by-Side, Mobile: Stacked) */}
+        {/* Vertical Layout Grid */}
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">
           <div className="flex flex-col animate-in slide-in-from-left duration-500 overflow-hidden h-full">
             <CodeEditor 
