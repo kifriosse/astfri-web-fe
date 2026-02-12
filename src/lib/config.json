@@ -2,5 +2,5 @@
 {
   "ApiBaseUrl": "https://localhost:7280",
   "InputLibs": ["cpp", "csharp", "java"],
-  "OutputLibs": ["text-pseudocode", "text-javecode", "uml"]
+  "OutputLibs": ["text-pseudocode", "text-javacode", "uml"]
 }

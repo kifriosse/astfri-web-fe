@@ -127,7 +127,7 @@ export default function Home() {
       </main>
 
       <footer className="p-6 text-center text-xs text-muted-foreground border-t bg-white">
-        <p>© 2024 ASTFRI Transformation Engine. Powering automated software analysis.</p>
+        <p>© 2026 ASTFRI Transformation Engine. Powering automated software analysis.</p>
       </footer>
       <Toaster />
     </div>

@@ -38,7 +38,7 @@ export function Header() {
           
           <nav className="hidden md:flex items-center space-x-1">
             <Badge variant="secondary" className="bg-accent/10 text-accent border-none font-medium">
-              v1.0.4-beta
+              v0.0.1
             </Badge>
           </nav>
         </div>
