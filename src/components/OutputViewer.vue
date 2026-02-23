@@ -17,7 +17,6 @@ const props = defineProps<{
   content: string;
   isLoading: boolean;
   error?: string;
-  logs?: string[];
   isUml?: boolean;
 }>();
 
@@ -150,15 +149,7 @@ const handleCopy = async () => {
             <p>Run transformation to see results</p>
           </div>
 
-          <div v-if="logs && logs.length > 0 && !error" class="bg-muted p-4 border-t max-h-32 overflow-auto">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Logs</h4>
-            <div class="space-y-1">
-              <p v-for="(log, index) in logs" :key="index" class="text-[10px] font-mono opacity-70">
-                <span class="text-accent-foreground/50 mr-2">[{{ new Date().toLocaleTimeString() }}]</span>
-                {{ log }}
-              </p>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>

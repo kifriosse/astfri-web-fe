@@ -114,7 +114,6 @@ const isUml = computed(() => selectedOutput.value === "uml");
             :content="transformationResult?.result || ''"
             :is-loading="isTransforming"
             :error="transformationResult?.error"
-            :logs="transformationResult?.logs"
             :is-uml="isUml"
           />
         </div>

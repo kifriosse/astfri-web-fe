@@ -12,7 +12,6 @@ export interface TransformRequest {
 export interface TransformResponse {
   result: string;
   error?: string;
-  logs?: string[];
 }
 
 /**
@@ -60,8 +59,7 @@ export const transformSourceCode = async (data: TransformRequest): Promise<Trans
       // Support both 'output' and 'result' fields in the response JSON
       return {
         result: responseData.output || responseData.result || "",
-        error: responseData.error,
-        logs: responseData.logs
+        error: responseData.error
       };
     } else {
       const text = await response.text();
