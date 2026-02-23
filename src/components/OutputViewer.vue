@@ -88,7 +88,7 @@ const handleCopy = async () => {
         <div class="w-full max-w-xs space-y-2">
           <UiProgress :value="logs?.length ? (logs.length / 4) * 100 : 33" />
           <p class="text-sm text-center text-muted-foreground animate-pulse">
-            {{ logs?.[logs.length - 1] || "Spracuvanie..." }}
+            {{ logs?.[logs.length - 1] || "Processing..." }}
           </p>
         </div>
       </div>
@@ -141,12 +141,11 @@ const handleCopy = async () => {
               </div>
             </div>
 
-            <pre v-else class="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed">
-              {{ content }}
+            <pre v-else class="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed">{{ content }}
             </pre>
           </template>
 
-          <div v-else class="flex flex-col items-center justify-center flex-1 p-12 text-center text-muted-foreground">
+          <div v-else-if="!isLoading" class="flex flex-col items-center justify-center flex-1 p-12 text-center text-muted-foreground">
             <CheckCircle2 class="w-12 h-12 mb-4 opacity-20" />
             <p>Run transformation to see results</p>
           </div>
