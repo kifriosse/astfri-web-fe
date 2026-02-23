@@ -31,6 +31,8 @@ const isTransforming = ref(false);
 
 const currentLib = computed(() => inputLibs.find((lib) => lib.id === selectedLanguage.value));
 
+const transformationAttempted = computed(() => transformationResult.value !== null);
+
 watch(selectedLanguage, (newLangId) => {
   const lib = inputLibs.find((l) => l.id === newLangId);
   if (lib) {
@@ -127,6 +129,7 @@ const isUml = computed(() => selectedOutput.value === "uml");
             :is-loading="isTransforming"
             :error="transformationResult?.error"
             :is-uml="isUml"
+            :transformation-attempted="transformationAttempted"
           />
         </div>
       </div>

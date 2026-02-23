@@ -18,6 +18,7 @@ const props = defineProps<{
   isLoading: boolean;
   error?: string;
   isUml?: boolean;
+  transformationAttempted?: boolean;
 }>();
 
 const { toast } = useToast();
@@ -143,6 +144,12 @@ const handleCopy = async () => {
             <pre v-else class="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap leading-relaxed">{{ content }}
             </pre>
           </template>
+
+          <div v-else-if="!isLoading && transformationAttempted" class="flex flex-col items-center justify-center flex-1 p-12 text-center">
+            <AlertCircle class="w-12 h-12 text-warning mb-4" />
+            <h3 class="text-lg font-headline font-bold text-muted-foreground">No Content</h3>
+            <p class="text-muted-foreground mt-2">Transformation completed but returned empty output.</p>
+          </div>
 
           <div v-else-if="!isLoading" class="flex flex-col items-center justify-center flex-1 p-12 text-center text-muted-foreground">
             <CheckCircle2 class="w-12 h-12 mb-4 opacity-20" />
