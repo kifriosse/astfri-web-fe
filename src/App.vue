@@ -41,6 +41,10 @@ const hasOutputConfig = computed(() => Boolean(currentOutputLib.value?.config &&
 
 const transformationAttempted = computed(() => transformationResult.value !== null);
 
+watch(selectedLanguage, () => {
+  sourceCode.value = currentLib.value?.defaultExample || "";
+});
+
 watch(selectedOutput, () => {
   showConfigForm.value = false;
 });
