@@ -9,19 +9,26 @@ import UiButton from "@/components/ui/UiButton.vue";
 import { transformSourceCode, type TransformResponse } from "@/lib/api";
 import config from "@/lib/config.json";
 
-const selectedLanguage = ref<string>(config.InputLibs[0]);
+type InputLib = {
+  id: string;
+  label: string;
+  monacoEditorId: string;
+  defaultExample: string;
+};
+
+const inputLibs = config.InputLibs as InputLib[];
+const selectedLanguage = ref<string>(inputLibs[0].id);
 const selectedOutput = ref<string>(config.OutputLibs[0]);
-const sourceCode = ref<string>(
-  (config as Record<string, Record<string, string>>).InputLibsDefaults?.[config.InputLibs[0]] || ""
-);
+const sourceCode = ref<string>(inputLibs[0].defaultExample);
 const transformationResult = ref<TransformResponse | null>(null);
 const isTransforming = ref(false);
 
-watch(selectedLanguage, (newLang) => {
-  const defaults = (config as Record<string, Record<string, string>>).InputLibsDefaults;
-  const defaultCode = defaults?.[newLang];
-  if (defaultCode) {
-    sourceCode.value = defaultCode;
+const currentLib = computed(() => inputLibs.find((lib) => lib.id === selectedLanguage.value));
+
+watch(selectedLanguage, (newLangId) => {
+  const lib = inputLibs.find((l) => l.id === newLangId);
+  if (lib) {
+    sourceCode.value = lib.defaultExample;
   }
 });
 
@@ -64,8 +71,8 @@ const isUml = computed(() => selectedOutput.value === "uml");
               v-model="selectedLanguage"
               class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
-              <option v-for="lib in config.InputLibs" :key="lib" :value="lib">
-                {{ lib.toUpperCase() }}
+              <option v-for="lib in inputLibs" :key="lib.id" :value="lib.id">
+                {{ lib.label }}
               </option>
             </select>
           </div>
@@ -106,7 +113,7 @@ const isUml = computed(() => selectedOutput.value === "uml");
 
       <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">
         <div class="flex flex-col animate-in slide-in-from-left duration-500 overflow-hidden h-full">
-          <CodeEditor v-model="sourceCode" :language="selectedLanguage.toUpperCase()" />
+          <CodeEditor v-model="sourceCode" :language="currentLib?.monacoEditorId || 'cpp'" />
         </div>
 
         <div class="flex flex-col animate-in slide-in-from-right duration-700 overflow-hidden h-full">

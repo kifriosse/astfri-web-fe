@@ -1,11 +1,28 @@
-
 {
-  "ApiBaseUrl": "https://localhost:7280",
-  "InputLibs": ["cpp", "csharp", "java"],
-  "OutputLibs": ["text-pseudocode", "text-javacode", "uml"],
-  "InputLibsDefaults": {
-    "cpp": "bool nieco() { \n    int intDecl; \n    auto lam = [&intDecl](int a) -> bool { \n        a = a + 3; \n        intDecl = 0; \n        return true; \n    }; \n    return lam(intDecl); \n}",
-    "csharp": "using System;\n\nnamespace HelloWorld {\n    class Program {\n        static void Main(string[] args) {\n            Console.WriteLine(\"Hello World from C#\");\n        }\n    }\n}",
-    "java": "public interface Animal { \n    String makeSound(); \n    String getName(); \n}"
-  }
+    "ApiBaseUrl": "https://localhost:7280",
+    "InputLibs": [
+        {
+            "id": "cpp",
+            "label": "C++",
+            "monacoEditorId": "cpp",
+            "defaultExample": "bool nieco() { \n    int intDecl; \n    auto lam = [&intDecl](int a) -> bool { \n        a = a + 3; \n        intDecl = 0; \n        return true; \n    }; \n    return lam(intDecl); \n}"
+        },
+        {
+            "id": "csharp",
+            "label": "C#",
+            "monacoEditorId": "csharp",
+            "defaultExample": "using System;\n\nnamespace HelloWorld {\n    class Program {\n        static void Main(string[] args) {\n            Console.WriteLine(\"Hello World from C#\");\n        }\n    }\n}"
+        },
+        {
+            "id": "java",
+            "label": "Java",
+            "monacoEditorId": "java",
+            "defaultExample": "public interface Animal { \n    String makeSound(); \n    String getName(); \n}"
+        }
+    ],
+    "OutputLibs": [
+        "text-pseudocode",
+        "text-javacode",
+        "uml"
+    ]
 }
