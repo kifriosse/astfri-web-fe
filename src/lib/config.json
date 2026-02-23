@@ -21,8 +21,17 @@
         }
     ],
     "OutputLibs": [
-        "text-pseudocode",
-        "text-javacode",
-        "uml"
+        {
+            "id": "text-pseudocode",
+            "label": "Text Pseudocode"
+        },
+        {
+            "id": "text-javacode",
+            "label": "Text Java Code"
+        },
+        {
+            "id": "uml",
+            "label": "UML"
+        }
     ]
 }

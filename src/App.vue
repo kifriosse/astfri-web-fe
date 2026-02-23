@@ -16,9 +16,15 @@ type InputLib = {
   defaultExample: string;
 };
 
+type OutputLib = {
+  id: string;
+  label: string;
+};
+
 const inputLibs = config.InputLibs as InputLib[];
+const outputLibs = config.OutputLibs as OutputLib[];
 const selectedLanguage = ref<string>(inputLibs[0].id);
-const selectedOutput = ref<string>(config.OutputLibs[0]);
+const selectedOutput = ref<string>(outputLibs[0].id);
 const sourceCode = ref<string>(inputLibs[0].defaultExample);
 const transformationResult = ref<TransformResponse | null>(null);
 const isTransforming = ref(false);
@@ -85,9 +91,8 @@ const isUml = computed(() => selectedOutput.value === "uml");
               v-model="selectedOutput"
               class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
-              <option value="" disabled>Output Lib</option>
-              <option v-for="lib in config.OutputLibs" :key="lib" :value="lib">
-                {{ lib.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join(' ') }}
+              <option v-for="lib in outputLibs" :key="lib.id" :value="lib.id">
+                {{ lib.label }}
               </option>
             </select>
           </div>
