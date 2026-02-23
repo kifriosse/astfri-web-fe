@@ -4,6 +4,7 @@ import { Settings2, Sparkles, Wand2 } from "lucide-vue-next";
 import Header from "@/components/Header.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import OutputViewer from "@/components/OutputViewer.vue";
+import OutputConfigForm from "@/components/OutputConfigForm.vue";
 import Toaster from "@/components/ui/Toaster.vue";
 import UiButton from "@/components/ui/UiButton.vue";
 import { transformSourceCode, type TransformResponse } from "@/lib/api";
@@ -19,6 +20,7 @@ type InputLib = {
 type OutputLib = {
   id: string;
   label: string;
+  config?: any[];
 };
 
 const inputLibs = config.InputLibs as InputLib[];
@@ -26,19 +28,26 @@ const outputLibs = config.OutputLibs as OutputLib[];
 const selectedLanguage = ref<string>(inputLibs[0].id);
 const selectedOutput = ref<string>(outputLibs[0].id);
 const sourceCode = ref<string>(inputLibs[0].defaultExample);
+const outputConfig = ref<Record<string, any>>({});
+const showConfigForm = ref<boolean>(false);
 const transformationResult = ref<TransformResponse | null>(null);
 const isTransforming = ref(false);
 
 const currentLib = computed(() => inputLibs.find((lib) => lib.id === selectedLanguage.value));
 
+const currentOutputLib = computed(() => outputLibs.find((lib) => lib.id === selectedOutput.value));
+
+const hasOutputConfig = computed(() => Boolean(currentOutputLib.value?.config && currentOutputLib.value.config.length > 0));
+
 const transformationAttempted = computed(() => transformationResult.value !== null);
 
-watch(selectedLanguage, (newLangId) => {
-  const lib = inputLibs.find((l) => l.id === newLangId);
-  if (lib) {
-    sourceCode.value = lib.defaultExample;
-  }
+watch(selectedOutput, () => {
+  showConfigForm.value = false;
 });
+
+const toggleConfigForm = () => {
+  showConfigForm.value = !showConfigForm.value;
+};
 
 const handleTransform = async () => {
   isTransforming.value = true;
@@ -49,6 +58,7 @@ const handleTransform = async () => {
       inputText: sourceCode.value,
       inputLib: selectedLanguage.value,
       outputLib: selectedOutput.value,
+      outputConfig: Object.keys(outputConfig.value).length > 0 ? outputConfig.value : undefined,
     });
     transformationResult.value = response;
   } catch (error) {
@@ -69,8 +79,8 @@ const isUml = computed(() => selectedOutput.value === "uml");
     <Header />
 
     <main class="flex-1 flex flex-col p-6 max-w-[1600px] mx-auto w-full space-y-6">
-      <div class="bg-white rounded-xl border p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+      <div class="bg-white rounded-xl border p-4 shadow-sm flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row items-end gap-4">
           <div class="flex flex-col space-y-1.5 w-full sm:w-48">
             <label class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
               Source Library
@@ -98,24 +108,35 @@ const isUml = computed(() => selectedOutput.value === "uml");
               </option>
             </select>
           </div>
+
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <UiButton
+              v-if="hasOutputConfig"
+              variant="outline"
+              class="flex-1 sm:flex-none border-dashed border-2"
+              @click="toggleConfigForm"
+            >
+              <Settings2 class="w-4 h-4 mr-2" />
+              {{ showConfigForm ? "Hide Config" : "Show Config" }}
+            </UiButton>
+            <UiButton
+              size="lg"
+              :disabled="isTransforming"
+              class="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-95"
+              @click="handleTransform"
+            >
+              <Sparkles v-if="isTransforming" class="w-4 h-4 mr-2 animate-spin" />
+              <Wand2 v-else class="w-4 h-4 mr-2" />
+              {{ isTransforming ? "Transforming..." : "Execute Transformation" }}
+            </UiButton>
+          </div>
         </div>
 
-        <div class="flex items-center space-x-3 w-full md:w-auto">
-          <UiButton variant="outline" class="flex-1 md:flex-none border-dashed border-2">
-            <Settings2 class="w-4 h-4 mr-2" />
-            Config
-          </UiButton>
-          <UiButton
-            size="lg"
-            :disabled="isTransforming"
-            class="flex-1 md:flex-none bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-95"
-            @click="handleTransform"
-          >
-            <Sparkles v-if="isTransforming" class="w-4 h-4 mr-2 animate-spin" />
-            <Wand2 v-else class="w-4 h-4 mr-2" />
-            {{ isTransforming ? "Transforming..." : "Execute Transformation" }}
-          </UiButton>
-        </div>
+        <OutputConfigForm
+          v-if="showConfigForm && hasOutputConfig"
+          :config="currentOutputLib?.config"
+          @update:config="(cfg) => (outputConfig = cfg)"
+        />
       </div>
 
       <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-0">

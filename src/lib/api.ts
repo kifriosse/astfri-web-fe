@@ -7,6 +7,7 @@ export interface TransformRequest {
   inputLib: string | null;
   inputText: string | null;
   outputLib: string | null;
+  outputConfig?: Record<string, any>;
 }
 
 export interface TransformResponse {

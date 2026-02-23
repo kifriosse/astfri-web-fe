@@ -31,7 +31,65 @@
         },
         {
             "id": "uml",
-            "label": "UML"
+            "label": "UML",
+            "config": [
+                {
+                    "id": "typeConvention",
+                    "label": "Type Convention",
+                    "type": "select",
+                    "cols": 12,
+                    "defaultValue": "TYPE_AFTER_IDENTIFIER",
+                    "options": [
+                        { "value": "TYPE_AFTER_IDENTIFIER", "label": "Type : Identifier" },
+                        { "value": "TYPE_BEFORE_IDENTIFIER", "label": "Identifier : Types" }
+                    ]
+                },
+                {
+                    "id": "innerView",
+                    "label": "Inner View",
+                    "type": "boolean",
+                    "cols": 4,
+                    "defaultValue": true,
+                    "description": "Show inner class/struct members"
+                },
+                {
+                    "id": "drawAccessModIcons",
+                    "label": "Draw Access Modifiers",
+                    "type": "boolean",
+                    "cols": 4,
+                    "defaultValue": true,
+                    "description": "Show +, -, #, ~ icons for access levels"
+                },
+                {
+                    "id": "handleNamespaces",
+                    "label": "Handle Namespaces",
+                    "type": "boolean",
+                    "cols": 4,
+                    "defaultValue": true,
+                    "description": "Include namespace information"
+                },
+                {
+                    "id": "diagramBG",
+                    "label": "Diagram Background Color",
+                    "type": "color",
+                    "cols": 4,
+                    "defaultValue": "#FFFFFF"
+                },
+                {
+                    "id": "elementBG",
+                    "label": "Element Background Color",
+                    "type": "color",
+                    "cols": 4,
+                    "defaultValue": "#FFDDDD"
+                },
+                {
+                    "id": "fontColor",
+                    "label": "Font Color",
+                    "type": "color",
+                    "cols": 4,
+                    "defaultValue": "#000000"
+                }
+            ]
         }
     ]
 }
