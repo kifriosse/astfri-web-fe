@@ -84,7 +84,7 @@ const isUml = computed(() => selectedOutput.value === "uml");
 
     <main class="flex-1 flex flex-col p-6 max-w-[1600px] mx-auto w-full space-y-6">
       <div class="bg-white rounded-xl border p-4 shadow-sm flex flex-col gap-4">
-        <div class="flex flex-col sm:flex-row items-end gap-4">
+        <div :class="['flex flex-col sm:flex-row items-end gap-4', showConfigForm && 'sticky top-16 z-40 bg-white -mx-4 -mt-4 px-4 pt-4 pb-4 rounded-t-xl border-b']">
           <div class="flex flex-col space-y-1.5 w-full sm:w-48">
             <label class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
               Source Library
