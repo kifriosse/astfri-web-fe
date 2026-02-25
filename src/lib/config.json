@@ -34,60 +34,251 @@
             "label": "UML",
             "config": [
                 {
-                    "id": "typeConvention",
-                    "label": "Type Convention",
-                    "type": "select",
-                    "cols": 12,
-                    "defaultValue": "TYPE_AFTER_IDENTIFIER",
+                    "id": "FILE",
+                    "label": "File",
                     "options": [
-                        { "value": "TYPE_AFTER_IDENTIFIER", "label": "Type : Identifier" },
-                        { "value": "TYPE_BEFORE_IDENTIFIER", "label": "Identifier : Types" }
+                        {
+                            "id": "write_to_file",
+                            "label": "Write To File",
+                            "type": "boolean",
+                            "cols": 4,
+                            "defaultValue": false,
+                            "description": "CHYBA - musi tu byt len preto ze inak to astfri-uml nevie parsnut"
+                        },
+                        {
+                            "id": "file_path",
+                            "label": "File Path",
+                            "type": "string",
+                            "cols": 8,
+                            "defaultValue": "/tmp/class_diagram",
+                            "description": "CHYBA - musi tu byt len preto ze inak to astfri-uml nevie parsnut"
+                        }
                     ]
                 },
                 {
-                    "id": "innerView",
-                    "label": "Inner View",
-                    "type": "boolean",
-                    "cols": 4,
-                    "defaultValue": true,
-                    "description": "Show inner class/struct members"
+                    "id": "TYPES",
+                    "label": "Types",
+                    "options": [
+                        {
+                            "id": "int",
+                            "label": "Int Type",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "int"
+                        },
+                        {
+                            "id": "float",
+                            "label": "Float Type",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "float"
+                        },
+                        {
+                            "id": "char",
+                            "label": "Char Type",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "char"
+                        },
+                        {
+                            "id": "bool",
+                            "label": "Bool Type",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "bool"
+                        },
+                        {
+                            "id": "void",
+                            "label": "Void Type",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "void"
+                        },
+                        {
+                            "id": "indirect_indicator",
+                            "label": "Indirect Indicator",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "*"
+                        },
+                        {
+                            "id": "separator",
+                            "label": "Type Separator",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": " : "
+                        },
+                        {
+                            "id": "type_convention",
+                            "label": "Type Convention",
+                            "type": "select",
+                            "cols": 8,
+                            "defaultValue": "TypeAfterConvention",
+                            "options": [
+                                { "value": "TypeBeforeConvention", "label": "Type Before Identifier" },
+                                { "value": "TypeAfterConvention", "label": "Type After Identifier" }
+                            ]
+                        }
+                    ]
                 },
                 {
-                    "id": "drawAccessModIcons",
-                    "label": "Draw Access Modifiers",
-                    "type": "boolean",
-                    "cols": 4,
-                    "defaultValue": true,
-                    "description": "Show +, -, #, ~ icons for access levels"
+                    "id": "ACCESS_MOD",
+                    "label": "Access Modifiers",
+                    "options": [
+                        {
+                            "id": "inner_view",
+                            "label": "Inner View",
+                            "type": "boolean",
+                            "cols": 4,
+                            "defaultValue": true,
+                            "description": "Show inner class/struct members"
+                        },
+                        {
+                            "id": "draw_icons",
+                            "label": "Draw Icons",
+                            "type": "boolean",
+                            "cols": 4,
+                            "defaultValue": true,
+                            "description": "Show +, -, #, ~ icons for access levels"
+                        },
+                        {
+                            "id": "public",
+                            "label": "Public Symbol",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "+"
+                        },
+                        {
+                            "id": "private",
+                            "label": "Private Symbol",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "-"
+                        },
+                        {
+                            "id": "protected",
+                            "label": "Protected Symbol",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "#"
+                        },
+                        {
+                            "id": "package_private",
+                            "label": "Package Private Symbol",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "~"
+                        }
+                    ]
                 },
                 {
-                    "id": "handleNamespaces",
-                    "label": "Handle Namespaces",
-                    "type": "boolean",
-                    "cols": 4,
-                    "defaultValue": true,
-                    "description": "Include namespace information"
+                    "id": "COLORS",
+                    "label": "Colors",
+                    "options": [
+                        {
+                            "id": "bg_diagram",
+                            "label": "Diagram Background",
+                            "type": "color",
+                            "cols": 4,
+                            "defaultValue": "#FFFFFF"
+                        },
+                        {
+                            "id": "bg_element",
+                            "label": "Element Background",
+                            "type": "color",
+                            "cols": 4,
+                            "defaultValue": "#FFDDDD"
+                        },
+                        {
+                            "id": "element_border",
+                            "label": "Element Border",
+                            "type": "color",
+                            "cols": 4,
+                            "defaultValue": "#000000"
+                        },
+                        {
+                            "id": "font_color",
+                            "label": "Font Color",
+                            "type": "color",
+                            "cols": 4,
+                            "defaultValue": "#000000"
+                        },
+                        {
+                            "id": "arrow_color",
+                            "label": "Arrow Color",
+                            "type": "color",
+                            "cols": 4,
+                            "defaultValue": "#000000"
+                        }
+                    ]
                 },
                 {
-                    "id": "diagramBG",
-                    "label": "Diagram Background Color",
-                    "type": "color",
-                    "cols": 4,
-                    "defaultValue": "#FFFFFF"
+                    "id": "RELATIONS",
+                    "label": "Relations",
+                    "options": [
+                        {
+                            "id": "association",
+                            "label": "Association",
+                            "type": "string",
+                            "cols": 3,
+                            "defaultValue": "<--"
+                        },
+                        {
+                            "id": "composition",
+                            "label": "Composition",
+                            "type": "string",
+                            "cols": 3,
+                            "defaultValue": "*--"
+                        },
+                        {
+                            "id": "extension",
+                            "label": "Extension",
+                            "type": "string",
+                            "cols": 3,
+                            "defaultValue": "<|--"
+                        },
+                        {
+                            "id": "implementation",
+                            "label": "Implementation",
+                            "type": "string",
+                            "cols": 3,
+                            "defaultValue": "<|.."
+                        }
+                    ]
                 },
                 {
-                    "id": "elementBG",
-                    "label": "Element Background Color",
-                    "type": "color",
-                    "cols": 4,
-                    "defaultValue": "#FFDDDD"
+                    "id": "DESTRUCTOR",
+                    "label": "Destructor",
+                    "options": [
+                        {
+                            "id": "indicator",
+                            "label": "Indicator",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "~"
+                        }
+                    ]
                 },
                 {
-                    "id": "fontColor",
-                    "label": "Font Color",
-                    "type": "color",
-                    "cols": 4,
-                    "defaultValue": "#000000"
+                    "id": "NAMESPACE",
+                    "label": "Namespace",
+                    "options": [
+                        {
+                            "id": "do_namespace",
+                            "label": "Handle Namespaces",
+                            "type": "boolean",
+                            "cols": 4,
+                            "defaultValue": false,
+                            "description": "Include namespace information"
+                        },
+                        {
+                            "id": "namespace_separator",
+                            "label": "Namespace Separator",
+                            "type": "string",
+                            "cols": 4,
+                            "defaultValue": "::"
+                        }
+                    ]
                 }
             ]
         }

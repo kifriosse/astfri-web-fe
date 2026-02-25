@@ -11,8 +11,16 @@ type ConfigOption = {
   options?: { value: string | number; label: string }[];
 };
 
+type ConfigGroup = {
+  id: string;
+  label: string;
+  description?: string;
+  cols?: number;
+  options: ConfigOption[];
+};
+
 interface Props {
-  config?: ConfigOption[];
+  config?: Array<ConfigOption | ConfigGroup>;
 }
 
 const props = defineProps<Props>();
@@ -21,30 +29,67 @@ const emit = defineEmits<{
   (event: "update:config", value: Record<string, any>): void;
 }>();
 
-const configValues = ref<Record<string, any>>({});
+const DEFAULT_GROUP_ID = "__default";
+
+const configValuesByGroup = ref<Record<string, Record<string, any>>>({});
+
+const isGroupedConfig = computed(() =>
+  Boolean(props.config && props.config.some((item) => "options" in item))
+);
+
+const groupedConfig = computed<ConfigGroup[]>(() => {
+  if (!props.config) {
+    return [];
+  }
+
+  if (isGroupedConfig.value) {
+    return props.config as ConfigGroup[];
+  }
+
+  return [
+    {
+      id: DEFAULT_GROUP_ID,
+      label: "",
+      options: props.config as ConfigOption[],
+    },
+  ];
+});
 
 // Initialize config values from defaults
+const buildOutputConfig = (): Record<string, any> => {
+  if (isGroupedConfig.value) {
+    return configValuesByGroup.value;
+  }
+  return configValuesByGroup.value[DEFAULT_GROUP_ID] ?? {};
+};
+
 watch(
   () => props.config,
   (newConfig) => {
     if (!newConfig) {
-      configValues.value = {};
+      configValuesByGroup.value = {};
       return;
     }
-    configValues.value = newConfig.reduce(
-      (acc, option) => {
-        acc[option.id] = option.defaultValue;
-        return acc;
-      },
-      {} as Record<string, any>
-    );
-    emit("update:config", configValues.value);
+
+    const nextValues: Record<string, Record<string, any>> = {};
+    groupedConfig.value.forEach((group) => {
+      nextValues[group.id] = group.options.reduce(
+        (acc, option) => {
+          acc[option.id] = option.defaultValue;
+          return acc;
+        },
+        {} as Record<string, any>
+      );
+    });
+
+    configValuesByGroup.value = nextValues;
+    emit("update:config", buildOutputConfig());
   },
   { immediate: true, deep: true }
 );
 
 const handleInputChange = () => {
-  emit("update:config", configValues.value);
+  emit("update:config", buildOutputConfig());
 };
 
 const getInputId = (optionId: string) => `output-config-${optionId}`;
@@ -92,86 +137,97 @@ const getGridColClass = (cols?: number): string => {
       Output Configuration
     </h3>
 
-    <div class="bg-muted/20 rounded-lg p-4 border border-border">
-      <div class="grid grid-cols-12 gap-4">
-        <div v-for="option in props.config" :key="option.id" :class="getGridColClass(option.cols)" class="flex flex-col gap-2">
-          <!-- Boolean Input -->
-          <div v-if="option.type === 'boolean'" class="flex items-start gap-2">
-            <input
-              :id="getInputId(option.id)"
-              v-model="configValues[option.id]"
-              type="checkbox"
-              class="w-4 h-4 rounded border-input focus:ring-2 focus:ring-ring mt-1 flex-shrink-0"
-              @change="handleInputChange"
-            />
-            <div class="flex-1">
-              <label :for="getInputId(option.id)" class="text-sm font-medium cursor-pointer block">
+    <div class="bg-muted/20 rounded-lg p-4 border border-border space-y-6">
+      <div v-for="group in groupedConfig" :key="group.id" class="space-y-3">
+        <div v-if="isGroupedConfig" class="space-y-1">
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {{ group.label }}
+          </h4>
+          <p v-if="group.description" class="text-xs text-muted-foreground">
+            {{ group.description }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-12 gap-4">
+          <div v-for="option in group.options" :key="option.id" :class="getGridColClass(option.cols)" class="flex flex-col gap-2">
+            <!-- Boolean Input -->
+            <div v-if="option.type === 'boolean'" class="flex items-start gap-2">
+              <input
+                :id="getInputId(`${group.id}-${option.id}`)"
+                v-model="configValuesByGroup[group.id][option.id]"
+                type="checkbox"
+                class="w-4 h-4 rounded border-input focus:ring-2 focus:ring-ring mt-1 flex-shrink-0"
+                @change="handleInputChange"
+              />
+              <div class="flex-1">
+                <label :for="getInputId(`${group.id}-${option.id}`)" class="text-sm font-medium cursor-pointer block">
+                  {{ option.label }}
+                </label>
+                <p v-if="option.description" class="text-xs text-muted-foreground mt-1">
+                  {{ option.description }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Select Input -->
+            <div v-else-if="option.type === 'select'" class="flex flex-col gap-1">
+              <label :for="getInputId(`${group.id}-${option.id}`)" class="text-sm font-medium">
                 {{ option.label }}
               </label>
-              <p v-if="option.description" class="text-xs text-muted-foreground mt-1">
+              <select
+                :id="getInputId(`${group.id}-${option.id}`)"
+                v-model="configValuesByGroup[group.id][option.id]"
+                class="flex h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                @change="handleInputChange"
+              >
+                <option v-for="opt in option.options" :key="opt.value" :value="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+              <p v-if="option.description" class="text-xs text-muted-foreground">
                 {{ option.description }}
               </p>
             </div>
-          </div>
 
-          <!-- Select Input -->
-          <div v-else-if="option.type === 'select'" class="flex flex-col gap-1">
-            <label :for="getInputId(option.id)" class="text-sm font-medium">
-              {{ option.label }}
-            </label>
-            <select
-              :id="getInputId(option.id)"
-              v-model="configValues[option.id]"
-              class="flex h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              @change="handleInputChange"
-            >
-              <option v-for="opt in option.options" :key="opt.value" :value="opt.value">
-                {{ opt.label }}
-              </option>
-            </select>
-            <p v-if="option.description" class="text-xs text-muted-foreground">
-              {{ option.description }}
-            </p>
-          </div>
-
-          <!-- Color Input -->
-          <div v-else-if="option.type === 'color'" class="flex flex-col gap-1">
-            <label :for="getInputId(option.id)" class="text-sm font-medium">
-              {{ option.label }}
-            </label>
-            <div class="flex items-center gap-2">
-              <input
-                :id="getInputId(option.id)"
-                v-model="configValues[option.id]"
-                type="color"
-                class="w-10 h-9 rounded-md border border-input cursor-pointer"
-                @change="handleInputChange"
-              />
-              <input
-                v-model="configValues[option.id]"
-                type="text"
-                class="flex-1 h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                placeholder="#000000"
-                @change="handleInputChange"
-              />
+            <!-- Color Input -->
+            <div v-else-if="option.type === 'color'" class="flex flex-col gap-1">
+              <label :for="getInputId(`${group.id}-${option.id}`)" class="text-sm font-medium">
+                {{ option.label }}
+              </label>
+              <div class="flex items-center gap-2">
+                <input
+                  :id="getInputId(`${group.id}-${option.id}`)"
+                  v-model="configValuesByGroup[group.id][option.id]"
+                  type="color"
+                  class="w-10 h-9 rounded-md border border-input cursor-pointer"
+                  @change="handleInputChange"
+                />
+                <input
+                  v-model="configValuesByGroup[group.id][option.id]"
+                  type="text"
+                  class="flex-1 h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  placeholder="#000000"
+                  @change="handleInputChange"
+                />
+              </div>
             </div>
-          </div>
 
-          <!-- Text/Number Input -->
-          <div v-else class="flex flex-col gap-1">
-            <label :for="getInputId(option.id)" class="text-sm font-medium">
-              {{ option.label }}
-            </label>
-            <input
-              :id="getInputId(option.id)"
-              v-model="configValues[option.id]"
-              :type="option.type"
-              class="flex h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              @change="handleInputChange"
-            />
-            <p v-if="option.description" class="text-xs text-muted-foreground">
-              {{ option.description }}
-            </p>
+            <!-- Text/Number Input -->
+            <div v-else class="flex flex-col gap-1">
+              <label :for="getInputId(`${group.id}-${option.id}`)" class="text-sm font-medium">
+                {{ option.label }}
+              </label>
+              <input
+                :id="getInputId(`${group.id}-${option.id}`)"
+                v-model="configValuesByGroup[group.id][option.id]"
+                :type="option.type"
+                class="flex h-9 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                @change="handleInputChange"
+              />
+              <p v-if="option.description" class="text-xs text-muted-foreground">
+                {{ option.description }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
