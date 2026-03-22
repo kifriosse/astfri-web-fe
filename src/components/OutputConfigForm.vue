@@ -94,24 +94,6 @@ const handleInputChange = () => {
 
 const getInputId = (optionId: string) => `output-config-${optionId}`;
 
-// Maps 12-column grid value to Tailwind width class for md and up
-const getColClass = (cols?: number): string => {
-  const colValue = cols ?? 12;
-  const colMap: Record<number, string> = {
-    1: "md:w-1/12",
-    2: "md:w-1/6",
-    3: "md:w-1/4",
-    4: "md:w-1/3",
-    5: "md:w-5/12",
-    6: "md:w-1/2",
-    8: "md:w-2/3",
-    9: "md:w-3/4",
-    10: "md:w-5/6",
-    12: "md:w-full",
-  };
-  return colMap[colValue] || "md:w-full";
-};
-
 // Maps 12-column grid value to Tailwind grid column class
 const getGridColClass = (cols?: number): string => {
   const colValue = cols ?? 12;
