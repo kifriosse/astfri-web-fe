@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { Activity, Github, Layout, ShieldCheck } from "lucide-vue-next";
+import { Activity, Github, ShieldCheck } from "lucide-vue-next";
 import UiBadge from "@/components/ui/UiBadge.vue";
 import { checkHealth } from "@/lib/api";
 
@@ -35,9 +35,7 @@ onBeforeUnmount(() => {
     <div class="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-6">
         <div class="flex items-center space-x-2">
-          <div class="bg-primary p-2 rounded-lg">
-            <Layout class="w-6 h-6 text-accent" />
-          </div>
+          <img src="/pwa-192x192.svg" alt="ASTFRI icon" class="w-10 h-10 rounded-lg" />
           <h1 class="text-xl font-headline font-bold tracking-tight text-primary">
             ASTFRI <span class="text-accent">Web</span>
           </h1>
