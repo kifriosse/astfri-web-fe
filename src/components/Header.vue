@@ -79,13 +79,9 @@ onBeforeUnmount(() => {
         <div class="h-6 w-px bg-border mx-2" />
 
         <div class="flex items-center space-x-3">
-          <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
-            <Github class="w-5 h-5" />
-          </a>
-          <div class="flex items-center space-x-1 bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10">
-            <ShieldCheck class="w-4 h-4 text-accent" />
-            <span class="text-xs font-semibold text-primary/80">Secure</span>
-          </div>
+            <a href="https://github.com/kifriosse/astfri" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors">
+                <Github class="w-5 h-5" />
+            </a>
         </div>
       </div>
     </div>
