@@ -161,7 +161,7 @@ const isUml = computed(() => selectedOutput.value === "uml");
     </main>
 
     <footer class="p-6 text-center text-xs text-muted-foreground border-t bg-white">
-      <p>© 2026 ASTFRI Transformation Engine. Powering automated software analysis.</p>
+    <p>© 2026 ASTFRI by <a href="https://www.fri.uniza.sk/" target="_blank" rel="noopener noreferrer" class="hover:underline">FRI UNIZA</a></p>
     </footer>
 
     <Toaster />
