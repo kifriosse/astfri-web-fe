@@ -1,5 +1,8 @@
-# Firebase Studio
+# ASTFRI Web FE
 
-This is a NextJS starter in Firebase Studio.
+This repository contains the web frontend for the ASTFRI project.
 
-To get started, take a look at src/app/page.tsx.
+- ASTFRI project: https://github.com/kifriosse/astfri
+- Coupled backend: https://github.com/Jancikos/KIFRIOSSE.ASTFRI
+
+The frontend depends on the backend API for transformation endpoints and should be run together with the backend service.
