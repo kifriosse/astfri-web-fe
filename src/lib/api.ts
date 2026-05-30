@@ -1,5 +1,5 @@
 
-import config from './config.json';
+import config from '../../config/config.json';
 
 const BASE_URL = config.ApiBaseUrl;
 

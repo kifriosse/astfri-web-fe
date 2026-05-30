@@ -8,7 +8,7 @@ import OutputConfigForm from "@/components/OutputConfigForm.vue";
 import Toaster from "@/components/ui/Toaster.vue";
 import UiButton from "@/components/ui/UiButton.vue";
 import { transformSourceCode, type TransformResponse } from "@/lib/api";
-import config from "@/lib/config.json";
+import config from "../config/config.json";
 
 type InputLib = {
   id: string;
